@@ -1,0 +1,104 @@
+/*{
+	"author": "Ed Gauthier",
+	"targets": ["omnifocus"],
+	"type": "action",
+	"identifier": "net.egauthier.omnifocus.of.change-defer-only-next-instance-of-repeating-task",
+	"version": "1.2",
+	"description": "This allows a defer date change only to a repeating task when you want future defer dates to remain fixed.",
+	"label": "Change Defer Date on Next Instance of Repeating Task",
+	"mediumLabel": "Change Defer for Next Instance",
+	"paletteLabel": "Change Next Defer",
+	"image":"goforward.plus"
+}*/
+(() => {
+
+	const action = new PlugIn.Action(function(selection, sender) {
+
+		//Get a new date to change the task to after duplication
+		let today = new Date()
+    today.setHours(0)
+    today.setMinutes(0)
+    today.setSeconds(0)
+    today.setMilliseconds(0)
+		var tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate()+1)
+    let selectedTasksHaveDue = selection.tasks.filter(t => t.dueDate != null).length > 0
+
+		let dateInputField = new Form.Field.Date(
+			"dateInput",
+			"Defer Date",
+			null
+		)
+		
+    let clearDueField = new Form.Field.Checkbox(
+      "clearDue",
+      "Clear Due",
+      null
+    )
+    
+		let inputForm = new Form()
+		inputForm.addField(dateInputField)
+    if (selectedTasksHaveDue){
+      inputForm.addField(clearDueField)
+    }
+    let formPrompt = "Enter a defer date after today:"
+		let buttonTitle = "Continue"
+		var formPromise = inputForm.show(formPrompt, buttonTitle)
+
+		inputForm.validate = function(formObject){
+			let dateInput = formObject.values["dateInput"]
+			return ((dateInput && dateInput >= today) ? true:false)
+		}
+
+		formPromise.then(function(formObject){
+			let dateInput = formObject.values["dateInput"]
+      let clearDue = formObject.values["clearDue"]
+			console.log(dateInput)
+			
+			let duplicatedTasks = new Array()
+			selection.tasks.forEach(function(task){
+				// confirm task is a repeating task
+				if(task.repetitionRule.method == Task.RepetitionMethod.Fixed){
+					//Duplicate task
+					let insertionLocation = task.parent || task.containingProject
+					if(insertionLocation === null){insertionLocation = inbox.ending}
+					let dupTasks = duplicateTasks([task], insertionLocation)
+					let dupTask = dupTasks[0]
+					//take repeat off the original task and change the next due date
+					dupTask.repetitionRule = null
+					dupTask.deferDate = dateInput
+          if (clearDue){
+            dupTask.dueDate = null
+          }
+				
+					//current task marked complete to generate the future task. Then we need to delete the one that was never actually completed.
+					task.markComplete();							
+				
+					//Delete last completed (this could probably be done more efficiently)
+					let last_task = flattenedTasks.reduce((a,b) => a.completionDate > b.completionDate ? a : b) 
+					if (last_task){deleteObject(last_task)}
+					duplicatedTasks.push(dupTask.id.primaryKey)
+				}
+			})
+			
+			if(duplicatedTasks.length > 0){
+				let idStr = duplicatedTasks.join(",")
+				URL.fromString("omnifocus:///task/" + idStr).open()
+			}
+		})
+
+		formPromise.catch(function(error){
+			console.log("form cancelled", error.message)
+		})		
+		
+	});
+
+	action.validate = function(selection, sender){
+		// validation code
+		// selection options: tasks, projects, folders, tags
+		return (selection.tasks.length > 0)
+	};
+	
+	return action;
+})();
+
