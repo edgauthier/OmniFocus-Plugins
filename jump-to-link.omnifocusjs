@@ -1,0 +1,36 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.jump-to-link",
+  "version": "1.0",
+  "description": "Jumps to the first link found in the notes field of an action. ",
+  "label": "Jump to link",
+  "shortLabel": "Jump to link",
+  "paletteLabel": "Jump to link",
+  "image": "gearshape"
+}*/
+(() => {
+  const action = new PlugIn.Action(function(selection, sender){
+    // action code
+    // selection options: tasks, projects, folders, tags, allObjects
+    const task = selection.tasks[0]
+    const note = task.note
+    if (note){
+      const linkRE = /\S+:\/\/\S+/
+      const matches = note.match(linkRE)
+      if (matches){
+        const link = matches[0]
+        URL.fromString(link).open()
+      }
+    }
+  });
+
+  action.validate = function(selection, sender){
+    // validation code
+    // selection options: tasks, projects, folders, tags, allObjects
+    return (selection.tasks.length === 1)
+  };
+  
+  return action;
+})();
