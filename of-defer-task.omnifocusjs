@@ -68,8 +68,7 @@
         // confirm task is a repeating task
         if(task.repetitionRule != null && task.repetitionRule.method == Task.RepetitionMethod.Fixed){
           //Duplicate task
-          let insertionLocation = task.parent || task.containingProject
-          if(insertionLocation === null){insertionLocation = inbox.ending}
+          let insertionLocation = task.after
           let dupTasks = duplicateTasks([task], insertionLocation)
           let dupTask = dupTasks[0]
 
