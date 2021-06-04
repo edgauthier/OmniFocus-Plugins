@@ -1,0 +1,58 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.create-engaged-launch-task",
+  "version": "1.0",
+  "description": "Creates an engaged launch task for project.",
+  "label": "Engaged Launch Task",
+  "shortLabel": "Engaged",
+  "paletteLabel": "Engaged",
+  "image": "gearshape"
+}*/
+(() => {
+  
+  // Set to the project ID of the target for the launch task
+  // This would be the Engaged project if following 
+  // Kurosh Dini's Creating Flow methodology
+  const targetProjectId = 'mr3jXc9OQBA'
+  const repetitionRuleString = 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'
+  const repetitionMethod = Task.RepetitionMethod.DeferUntilDate
+  
+  const getSelectedProject = (selection) => {
+    let project = null
+    if (selection.tasks.length === 1 && selection.tasks[0].containingProject != null){
+      project = selection.tasks[0].containingProject
+    }
+    else if (selection.projects.length === 1){
+      project = selection.projects[0]
+    }
+    return project
+  }
+  
+  const getTargetProject = () => {
+    return Project.byIdentifier(targetProjectId)
+  }
+  
+  const action = new PlugIn.Action(function(selection, sender){
+    const targetProject = getTargetProject()
+    const launchProject = getSelectedProject(selection)
+    const launchTaskName = `Work on: ${launchProject.name}`
+    const launchTaskLink = `omnifocus:///task/${launchProject.id.primaryKey}`
+    const launchTask = new Task(launchTaskName, targetProject)
+    launchTask.note = launchTaskLink
+    launchTask.repetitionRule = new Task.RepetitionRule(repetitionRuleString, repetitionMethod)
+    new Alert('Engaged Task Added', launchTaskName).show()
+    
+  });
+
+  action.validate = function(selection, sender){
+    // Make sure only one task is selected
+    // and that task is part of a project
+    // and that project isn't the target project
+    const p = getSelectedProject(selection) 
+    return p != null && p.id.primaryKey != targetProjectId
+  };
+  
+  return action;
+})();
