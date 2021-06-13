@@ -13,23 +13,30 @@
 (() => {
   
   const getTaskId = selection => {
-    const task = selection.tasks[0]
-    const taskId = task.id.primaryKey
-    return taskId
+    let taskId = null;
+    if (selection.tasks.length === 1){
+      const task = selection.tasks[0];
+      taskId = task.id.primaryKey;
+    }
+    else if (selection.projects.length === 1){
+      const project = selection.projects[0];
+      taskId = project.id.primaryKey;
+    }
+    return taskId;
   };
   
   const action = new PlugIn.Action(function(selection, sender){
     // action code
     // selection options: tasks, projects, folders, tags, allObjects
-    const taskId = getTaskId(selection)
-    const link = `omnifocus:///task/${taskId}`
-    Pasteboard.general.URL = URL.fromString(link)
+    const taskId = getTaskId(selection);
+    const link = `omnifocus:///task/${taskId}`;
+    Pasteboard.general.URL = URL.fromString(link);
   });
 
   action.validate = function(selection, sender){
     // validation code
     // selection options: tasks, projects, folders, tags, allObjects
-    return (selection.tasks.length === 1)
+    return (getTaskId(selection) != null)
   };
   
   return action;
