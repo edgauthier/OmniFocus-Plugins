@@ -1,0 +1,36 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.copy-link",
+  "version": "1.0",
+  "description": "Actions to copy link to a task",
+  "label": "Copy link",
+  "shortLabel": "Copy link",
+  "paletteLabel": "Copy link",
+  "image": "arrow.right.doc.on.clipboard"
+}*/
+(() => {
+  
+  const getTaskId = selection => {
+    const task = selection.tasks[0]
+    const taskId = task.id.primaryKey
+    return taskId
+  }
+  
+  const action = new PlugIn.Action(function(selection, sender){
+    // action code
+    // selection options: tasks, projects, folders, tags, allObjects
+    const taskId = getTaskId(selection)
+    const link = `omnifocus:///task/${taskId}`
+    Pasteboard.general.URL = 
+  });
+
+  action.validate = function(selection, sender){
+    // validation code
+    // selection options: tasks, projects, folders, tags, allObjects
+    return (selection.tasks.length === 1)
+  };
+  
+  return action;
+})();
