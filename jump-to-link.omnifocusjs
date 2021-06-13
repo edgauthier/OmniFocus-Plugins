@@ -8,7 +8,7 @@
   "label": "Jump to link",
   "shortLabel": "Jump to link",
   "paletteLabel": "Jump to link",
-  "image": "gearshape"
+  "image": "cursorarrow.click"
 }*/
 (() => {
   const action = new PlugIn.Action(function(selection, sender){
