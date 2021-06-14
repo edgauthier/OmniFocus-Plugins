@@ -1,0 +1,36 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.copy-taskpaper",
+  "version": "1.0",
+  "description": "Action to copy tasks as taskpaper",
+  "label": "Copy taskpaper",
+  "shortLabel": "Copy taskpaper",
+  "paletteLabel": "Copy taskpaper",
+  "image": "arrow.right.doc.on.clipboard"
+}*/
+(() => {
+  
+  const getSelectedTasks = selection => {
+    let tasks = []
+    selection.projects.forEach(p => tasks.push(p.task))
+    selection.tasks.forEach(t => tasks.push(t))
+    return tasks
+  };
+  
+  const action = new PlugIn.Action(function(selection, sender){
+    // action code
+    // selection options: tasks, projects, folders, tags, allObjects
+    let tasks = getSelectedTasks(selection)
+    copyTasksToPasteboard(tasks, Pasteboard.general)
+  });
+
+  action.validate = function(selection, sender){
+    // validation code
+    // selection options: tasks, projects, folders, tags, allObjects
+    return (getSelectedTasks(selection).length > 0)
+  };
+  
+  return action;
+})();
