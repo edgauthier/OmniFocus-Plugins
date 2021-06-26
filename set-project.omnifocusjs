@@ -1,0 +1,107 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.set-project",
+  "version": "1.0",
+  "description": "Set the project for one or more tasks",
+  "label": "Set project",
+  "shortLabel": "Set project",
+  "paletteLabel": "Set project",
+  "image": "circle.grid.cross"
+}*/
+(() => {
+  
+  // recursive function to prepend folder names
+  const folderPathName = folder => {
+    if (folder.parent != null){
+      return `${folderPathName(folder.parent)} : ${folder.name}`;
+    }
+    else {
+      return folder.name;
+    }
+  };
+  
+  const projectPath = p => {
+    let path = '';
+    let folder = p.parentFolder;
+    if (folder != null){
+      path = `${folderPathName(folder)} : `;
+    }
+    return path;
+  };
+  
+  const projectNames = projects => {
+    return projects.map(p => projectPath(p) + p.name);
+  };
+  
+  const projectIds = projects => {
+    return projects.map(p => p.id.primaryKey);
+  };
+  
+  const projectPickerField = filter => {
+    let results = projectsMatching(filter);
+    let projectPicker = new Form.Field.Option(
+      'projectId',
+      'Project',
+      projectIds(results),
+      projectNames(results)
+    );
+    projectPicker.allowsNull = true;
+    projectPicker.nullOptionTitle = 'Inbox';
+    return projectPicker;
+  }
+  
+  const action = new PlugIn.Action(function(selection, sender){
+    let tasks = selection.tasks;
+    let currentFilter = null;
+    
+    // prompt for project selection
+    let projectFilterField = new Form.Field.String(
+      'projectFilter', 
+      'Project Filter',
+      null
+    );
+    let projectField = projectPickerField('');
+    
+    let inputForm = new Form();
+    inputForm.addField(projectFilterField);
+    inputForm.addField(projectField);
+    
+    inputForm.validate = formObject => {
+      let filterText = formObject.values['projectFilter'];
+      if (filterText != currentFilter){
+        currentFilter = filterText;
+        if (inputForm.fields.length === 2){
+          inputForm.removeField(inputForm.fields[1]);
+        }
+        let filteredProjectField = projectPickerField(filterText);
+        inputForm.addField(filteredProjectField);
+      }
+      return true;
+    };
+    
+    let formPromise = inputForm.show('Select project', 'Assign project');
+    
+    formPromise.then(formObject => {
+      let projectId = formObject.values['projectId'];
+      let p = null;
+      if (projectId != null){
+        p = Project.byIdentifier(projectId);
+      }
+      tasks.forEach(t => {
+        t.assignedContainer = p;
+      });
+    });
+    
+    formPromise.catch(error => {
+      console.log(`Form error: ${error.message}`)
+    });
+  });
+
+  action.validate = function(selection, sender){
+    return (selection.tasks.length > 0)
+  };
+  
+  return action;
+})();
