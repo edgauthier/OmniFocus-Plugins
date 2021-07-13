@@ -85,13 +85,11 @@
     
     formPromise.then(formObject => {
       let projectId = formObject.values['projectId'];
-      let p = null;
+      let target = inbox.ending;
       if (projectId != null){
-        p = Project.byIdentifier(projectId);
+        target = Project.byIdentifier(projectId);
       }
-      tasks.forEach(t => {
-        t.assignedContainer = p;
-      });
+      moveTasks(tasks, target);
     });
     
     formPromise.catch(error => {
