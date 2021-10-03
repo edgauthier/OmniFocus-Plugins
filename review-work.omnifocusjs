@@ -1,0 +1,30 @@
+/*{
+  "type": "action",
+  "targets": ["omnifocus"],
+  "author": "Ed Gauthier",
+  "identifier": "net.egauthier.of.review-work",
+  "version": "1.0",
+  "description": "Sets focus to Personal and opens Review perspective.",
+  "label": "Review work",
+  "shortLabel": "Review (W)",
+  "paletteLabel": "Review work",
+  "image": "highlighter"
+}*/
+(() => {
+  const action = new PlugIn.Action(function(selection, sender){
+    // action code
+    // selection options: tasks, projects, folders, tags, allObjects
+    const focusSelection = [flattenedFolders.byName('System'), flattenedFolders.byName('Business')];
+    const win = document.windows[0];
+    win.focus = focusSelection;
+    win.perspective = Perspective.BuiltIn.Review;
+  });
+
+  action.validate = function(selection, sender){
+    // validation code
+    // selection options: tasks, projects, folders, tags, allObjects
+    return true;
+  };
+  
+  return action;
+})();
