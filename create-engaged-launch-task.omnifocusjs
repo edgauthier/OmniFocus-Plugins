@@ -5,7 +5,7 @@
   "identifier": "net.egauthier.of.create-engaged-launch-task",
   "version": "1.0",
   "description": "Creates an engaged launch task for project.",
-  "label": "Engaged Launch Task",
+  "label": "Engaged launch task",
   "shortLabel": "Engaged",
   "paletteLabel": "Engaged",
   "image": "target"
