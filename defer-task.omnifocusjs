@@ -64,8 +64,8 @@
     task.drop(false);
 
     //Then we need to delete the one that was never actually completed.
-    //Delete last completed (this could probably be done more efficiently)
-    let last_task = flattenedTasks.reduce((a,b) => a.completionDate > b.completionDate ? a : b) 
+    //Delete last dropped (this could probably be done more efficiently)
+    let last_task = flattenedTasks.reduce((a,b) => a.dropDate > b.dropDate ? a : b)
     if (last_task){deleteObject(last_task)}
 
     return dupTask;
