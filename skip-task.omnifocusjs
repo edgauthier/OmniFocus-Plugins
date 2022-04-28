@@ -1,0 +1,25 @@
+/*{
+    "author": "Ed Gauthier",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "net.egauthier.omnigroup.of.skip-task",
+    "version": "0.1",
+    "description": "Skips a task, regardless of whether it's a single or repeating task",
+    "label": "Skip task",
+    "mediumLabel": "Skip task",
+}*/
+(() => {
+    var action = new PlugIn.Action(function(selection) {
+        // Add code to run when the action is invoked
+        console.log("Invoked with selection", selection);
+        selection.tasks.forEach(function(task){
+            task.drop(false)
+        });
+    });
+
+    action.validate = function(selection){
+        return (selection.tasks.length > 0)
+    };
+        
+    return action;
+})();
