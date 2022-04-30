@@ -8,7 +8,7 @@
   "label": "Review personal",
   "shortLabel": "Review (P)",
   "paletteLabel": "Review personal",
-  "image": "highlighter"
+  "image": "cup.and.saucer.fill"
 }*/
 (() => {
   const action = new PlugIn.Action(function(selection, sender){

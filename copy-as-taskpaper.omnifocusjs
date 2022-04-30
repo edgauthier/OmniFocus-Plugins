@@ -8,7 +8,7 @@
   "label": "Copy taskpaper",
   "shortLabel": "Copy taskpaper",
   "paletteLabel": "Copy taskpaper",
-  "image": "arrow.right.doc.on.clipboard"
+  "image": "doc.on.clipboard.fill"
 }*/
 (() => {
   
