@@ -7,6 +7,7 @@
     "description": "Skips a task, regardless of whether it's a single or repeating task",
     "label": "Skip task",
     "mediumLabel": "Skip task",
+    "image": "minus.circle",
 }*/
 (() => {
     var action = new PlugIn.Action(function(selection) {
