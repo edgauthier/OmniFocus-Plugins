@@ -1,0 +1,30 @@
+{
+  "defaultLocale": "en",
+  "identifier": "com.KaitlinSalzke.Templates",
+  "author": "Kaitlin Salzke",
+  "description": "An OmniFocus plug-in that enables projects to be created from templates",
+  "version": "1.16.2",
+  "actions": [
+    {
+      "identifier": "createFromTemplate",
+      "image": "doc.badge.plus"
+    },
+    {
+      "identifier": "goToTemplatesFolder",
+      "image": "folder.fill"
+    },
+    {
+      "identifier": "hideTemplatesFolder",
+      "image": "folder"
+    },
+    {
+      "identifier": "preferences",
+      "image": "doc.badge.gearshape"
+    }
+  ],
+  "libraries": [
+    {
+      "identifier": "templateLibrary"
+    }
+  ]
+}
