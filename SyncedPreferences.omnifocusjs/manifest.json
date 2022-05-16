@@ -1,0 +1,22 @@
+{
+  "defaultLocale": "en",
+  "identifier": "com.KaitlinSalzke.SyncedPrefLibrary",
+  "author": "Kaitlin Salzke",
+  "description": "An OmniFocus plug-in bundle to assist with the syncing of plugin preferences across devices.",
+  "version": "4.7.2",
+  "actions": [
+    {
+      "identifier": "goToSyncedPrefProject",
+      "image": "folder.fill.badge.gear"
+    },
+    {
+      "identifier": "hideSyncedPrefProject",
+      "image": "folder.badge.gear"
+    }
+  ],
+  "libraries": [
+    {
+      "identifier": "syncedPrefLibrary"
+    }
+  ]
+}
