@@ -1,0 +1,25 @@
+/*{
+    "author": "Ed Gauthier",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "net.egauthier.omnigroup.of.complete-task",
+    "version": "0.1",
+    "description": "Completes a task",
+    "label": "Complete task",
+    "mediumLabel": "Complete task",
+    "image": "checkmark.circle",
+}*/
+(() => {
+    var action = new PlugIn.Action(function(selection) {
+        // Add code to run when the action is invoked
+        selection.tasks.forEach(function(task){
+            task.markComplete();
+        });
+    });
+
+    action.validate = function(selection){
+        return (selection.tasks.length > 0)
+    };
+        
+    return action;
+})();
