@@ -5,7 +5,7 @@
 
     const templateFolder = await templateLibrary.getTemplateFolder()
 
-    if (Device.current.mac) await document.newTabOnWindow(document.windows[0])
+    //if (Device.current.mac) await document.newTabOnWindow(document.windows[0])
 
     templateFolder.active = true
     const urlStr = 'omnifocus:///folder/' + templateFolder.id.primaryKey
@@ -13,10 +13,12 @@
 
     // if user is in focus mode, add the templates folder to the focus
     // Mac only as focus not yet supported on iOS API
+    /*
     if (Device.current.mac) {
       const focus = document.windows[0].focus
-      if (focus !== null) document.windows[0].focus = [templateFolder]
+      if (focus !== null) document.windows[0].focus = null
     }
+    */
   })
 
   action.validate = function (selection, sender) {
